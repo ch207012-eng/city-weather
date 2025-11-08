@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+venv/
+*.pyc
+
+# Environment files
+.env
+
+# Dash / plotly caches, logs
+*.log
+
+# VS Code / Codespaces
+.vscode/
+.history/
