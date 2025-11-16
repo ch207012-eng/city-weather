@@ -4,8 +4,32 @@
   <title>City Weather</title>
 </head>
 <body>
-  <script>
+  <div>
     
+  </div>
+  <script>
+     const kafkaSocServ = new WebSocket('')
+
+    kafkaSocServ.onopen = () =>
+    {
+      console.log('connected');
+    }
+
+    kafkaSocServ.onmessage = (event) =>
+    {
+      const message = event.data;
+    }
+
+    kafkaSocServ.onclose = () =>
+    {
+
+    }
+
+    kafkaSocServ.onerror = (error) =>
+    {
+      console.error("there was an error: ", error);
+    }
   </script>
 </body>
 </html>
+
