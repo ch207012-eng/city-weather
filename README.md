@@ -56,7 +56,7 @@ city-weather/
 ### 1️⃣ Create `.env` file
 
 ```
-OPENWEATHER_API_KEY=YOUR_API_KEY_HERE
+export OPENWEATHER_API_KEY=YOUR_API_KEY_HERE
 KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 POLL_INTERVAL_SECONDS=300
 ```
@@ -100,6 +100,8 @@ source .venv/bin/activate
 
 pip install -r producer/requirements.txt
 pip install -r consumer_dashboard/requirements.txt
+pip install kafka-python
+pip install python-dotenv
 ```
 
 ---
