@@ -20,7 +20,7 @@ This repository cannot be deployed directly to Netlify as-is because it depends 
 
 ## Netlify setup (frontend only)
 
-1. Push your static frontend code to GitHub.
+1. Push your static frontend code to your Git provider.
 2. In Netlify, select **Add new site** → **Import an existing project**.
 3. Connect the GitHub repo/branch.
 4. Configure:
