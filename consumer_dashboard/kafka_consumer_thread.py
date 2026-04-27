@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
 TOPIC = os.getenv("KAFKA_TOPIC", "city-weather")
-SECURITY_PROTOCOL = os.getenv("KAFKA_SECURITY_PROTOCOL", "SASL_SSL")
+SECURITY_PROTOCOL = os.getenv("KAFKA_SECURITY_PROTOCOL", "PLAINTEXT")
 SASL_MECHANISM = os.getenv("KAFKA_SASL_MECHANISM", "PLAIN")
 SASL_USERNAME = os.getenv("KAFKA_SASL_USERNAME")
 SASL_PASSWORD = os.getenv("KAFKA_SASL_PASSWORD")
