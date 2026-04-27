@@ -160,30 +160,41 @@ You will see real-time graphs updating automatically.
 
 ## ☁️ Production Deployment (Recommended)
 
-This repository includes **`render.yaml`** to deploy both app components on Render and connect to **Confluent Cloud Kafka**:
+This repository includes **`render.yaml`** so Render can provision both services from a single Blueprint:
 
-- `city-weather-producer` (Render worker) → runs `producer/producer.py`
-- `city-weather-dashboard` (Render web service) → runs `consumer_dashboard/app.py`
+- `city-weather-dashboard` (web) → runs `consumer_dashboard/app.py`
+- `city-weather-producer` (worker) → runs `producer/producer.py`
 
 ### 1️⃣ Provision Confluent Cloud Kafka
 - Create a Confluent Cloud cluster.
-- Create topic: `city-weather` (or set a custom `KAFKA_TOPIC`).
-- Create API key/secret for Kafka access.
-- Copy bootstrap server value.
+- Create topic: `city-weather` (or set your own via `KAFKA_TOPIC`).
+- Create Kafka API key + secret.
+- Copy the bootstrap server value.
 
 ### 2️⃣ Create Render Blueprint
-- In Render, create a new Blueprint from this repo.
-- Render reads `render.yaml` and creates both services automatically.
+- In Render, click **New + → Blueprint**.
+- Select repo **`ch207012-eng/city-weather`**.
+- Render detects `render.yaml` and creates both services automatically.
 
-### 3️⃣ Set required Render environment variables
-- `OPENWEATHER_API_KEY` (worker only)
-- `KAFKA_BOOTSTRAP_SERVERS` (both services)
-- `KAFKA_SASL_USERNAME` and `KAFKA_SASL_PASSWORD` (both services)
-- Optional overrides: `KAFKA_TOPIC`, `POLL_INTERVAL_SECONDS`, `KAFKA_SECURITY_PROTOCOL`, `KAFKA_SASL_MECHANISM`
+### 3️⃣ Set required environment variables
+- **Both services**
+  - `KAFKA_BOOTSTRAP_SERVERS` (Confluent bootstrap, e.g. `pkc-xxxxx.us-central1.gcp.confluent.cloud:9092`)
+  - `KAFKA_SASL_USERNAME` (Confluent API key)
+  - `KAFKA_SASL_PASSWORD` (Confluent API secret)
+- **Worker only**
+  - `OPENWEATHER_API_KEY`
+- **Optional (already defaulted in `render.yaml`)**
+  - `KAFKA_TOPIC=city-weather`
+  - `KAFKA_SECURITY_PROTOCOL=SASL_SSL`
+  - `KAFKA_SASL_MECHANISM=PLAIN`
+  - `POLL_INTERVAL_SECONDS=300`
 
-### 4️⃣ Validate end-to-end
-- Check worker logs for `✅ Sent to ...`.
-- Open the dashboard service URL and verify city graphs update.
+### 4️⃣ Deploy
+- Click **Apply** in Render to start deployment.
+
+### 5️⃣ Validate end-to-end
+- Worker logs should show `✅ Sent to ...`.
+- Open the dashboard service URL and confirm city charts update.
 
 ---
 
