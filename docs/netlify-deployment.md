@@ -14,7 +14,7 @@ This repository cannot be deployed directly to Netlify as-is because it depends 
 ## Recommended implementation path
 
 1. Keep the existing services running on a Python-friendly host (web + worker).
-2. Add backend API endpoints for frontend polling (for example `/api/cities`, `/api/weather/latest`).
+2. Add backend API endpoints for frontend polling (e.g., `/api/cities`, `/api/weather/latest`).
 3. Build a static frontend that reads from that API.
 4. Deploy that frontend to Netlify.
 
