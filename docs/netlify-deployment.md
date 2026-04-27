@@ -2,6 +2,11 @@
 
 This repository cannot be deployed directly to Netlify as-is because it depends on always-on Python/Kafka processes.
 
+## Key limitations (important)
+
+- Do **not** run Kafka producer/consumer directly on Netlify because Kafka consumers require persistent long-lived connections.
+- Do **not** rely on Netlify Functions for persistent stream consumers because Netlify Functions are stateless and short-lived.
+
 ## What to deploy where
 
 - **Netlify**: static frontend only
@@ -31,6 +36,4 @@ This repository cannot be deployed directly to Netlify as-is because it depends 
 
 ## Important notes
 
-- Do **not** run Kafka producer/consumer directly on Netlify because Kafka consumers require persistent long-lived connections.
-- Do **not** rely on Netlify Functions for persistent stream consumers because Netlify Functions are stateless and short-lived.
 - Keep backend API CORS configured for your Netlify domain.

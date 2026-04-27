@@ -67,8 +67,7 @@ Netlify is optimized for static hosting and serverless functions, so it is not a
 Use a host that supports always-on Python services (Render/Railway/Fly.io/VM).
 Check each platform's free-tier limits and sleeping behavior before production use.
 
-This repo includes a Render Blueprint at:
-- `render.yaml`
+This repo includes a Render Blueprint (`render.yaml`) that defines:
 
 It defines:
 - `city-weather-dashboard` (web service)
