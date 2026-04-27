@@ -8,18 +8,34 @@ from dotenv import load_dotenv
 
 load_dotenv()
 BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+TOPIC = os.getenv("KAFKA_TOPIC", "city-weather")
+SECURITY_PROTOCOL = os.getenv("KAFKA_SECURITY_PROTOCOL", "SASL_SSL")
+SASL_MECHANISM = os.getenv("KAFKA_SASL_MECHANISM", "PLAIN")
+SASL_USERNAME = os.getenv("KAFKA_SASL_USERNAME")
+SASL_PASSWORD = os.getenv("KAFKA_SASL_PASSWORD")
 
 shared_store = {}
 MAX_POINTS = 200
 
 def kafka_reader():
-    consumer = KafkaConsumer(
-        'city-weather',
-        bootstrap_servers=BOOTSTRAP,
-        auto_offset_reset='earliest',
-        enable_auto_commit=True,
-        value_deserializer=lambda m: json.loads(m.decode('utf-8'))
-    )
+    consumer_kwargs = {
+        "bootstrap_servers": BOOTSTRAP,
+        "auto_offset_reset": "earliest",
+        "enable_auto_commit": True,
+        "value_deserializer": lambda m: json.loads(m.decode("utf-8")),
+    }
+
+    if SASL_USERNAME and SASL_PASSWORD:
+        consumer_kwargs.update(
+            {
+                "security_protocol": SECURITY_PROTOCOL,
+                "sasl_mechanism": SASL_MECHANISM,
+                "sasl_plain_username": SASL_USERNAME,
+                "sasl_plain_password": SASL_PASSWORD,
+            }
+        )
+
+    consumer = KafkaConsumer(TOPIC, **consumer_kwargs)
     print("Kafka consumer thread started and listening...")
     for msg in consumer:
         data = msg.value

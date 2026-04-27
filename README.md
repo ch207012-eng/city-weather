@@ -58,7 +58,13 @@ city-weather/
 ```
 export OPENWEATHER_API_KEY=YOUR_API_KEY_HERE
 KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+KAFKA_TOPIC=city-weather
 POLL_INTERVAL_SECONDS=300
+# Optional for Confluent Cloud / managed Kafka:
+# KAFKA_SECURITY_PROTOCOL=SASL_SSL
+# KAFKA_SASL_MECHANISM=PLAIN
+# KAFKA_SASL_USERNAME=...
+# KAFKA_SASL_PASSWORD=...
 ```
 
 ---
@@ -149,6 +155,35 @@ https://xxxx-8050.app.github.dev
 ```
 
 You will see real-time graphs updating automatically.
+
+---
+
+## ☁️ Production Deployment (Recommended)
+
+This repository includes **`render.yaml`** to deploy both app components on Render and connect to **Confluent Cloud Kafka**:
+
+- `city-weather-producer` (Render worker) → runs `producer/producer.py`
+- `city-weather-dashboard` (Render web service) → runs `consumer_dashboard/app.py`
+
+### 1️⃣ Provision Confluent Cloud Kafka
+- Create a Confluent Cloud cluster.
+- Create topic: `city-weather` (or set a custom `KAFKA_TOPIC`).
+- Create API key/secret for Kafka access.
+- Copy bootstrap server value.
+
+### 2️⃣ Create Render Blueprint
+- In Render, create a new Blueprint from this repo.
+- Render reads `render.yaml` and creates both services automatically.
+
+### 3️⃣ Set required Render environment variables
+- `OPENWEATHER_API_KEY` (worker only)
+- `KAFKA_BOOTSTRAP_SERVERS` (both services)
+- `KAFKA_SASL_USERNAME` and `KAFKA_SASL_PASSWORD` (both services)
+- Optional overrides: `KAFKA_TOPIC`, `POLL_INTERVAL_SECONDS`, `KAFKA_SECURITY_PROTOCOL`, `KAFKA_SASL_MECHANISM`
+
+### 4️⃣ Validate end-to-end
+- Check worker logs for `✅ Sent to ...`.
+- Open the dashboard service URL and verify city graphs update.
 
 ---
 

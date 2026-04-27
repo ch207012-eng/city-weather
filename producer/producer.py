@@ -10,6 +10,11 @@ load_dotenv()
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
 POLL_INTERVAL = int(os.getenv("POLL_INTERVAL_SECONDS", "60"))
+TOPIC = os.getenv("KAFKA_TOPIC", "city-weather")
+SECURITY_PROTOCOL = os.getenv("KAFKA_SECURITY_PROTOCOL", "SASL_SSL")
+SASL_MECHANISM = os.getenv("KAFKA_SASL_MECHANISM", "PLAIN")
+SASL_USERNAME = os.getenv("KAFKA_SASL_USERNAME")
+SASL_PASSWORD = os.getenv("KAFKA_SASL_PASSWORD")
 
 CITIES = {
     "Saint Paul": {"lat": 44.9537, "lon": -93.0900},
@@ -54,17 +59,29 @@ def main():
         print("❌ OPENWEATHER_API_KEY is missing in .env")
         return
 
-    producer = KafkaProducer(
-        bootstrap_servers=BOOTSTRAP,
-        value_serializer=lambda v: json.dumps(v).encode("utf-8"),
-    )
+    producer_kwargs = {
+        "bootstrap_servers": BOOTSTRAP,
+        "value_serializer": lambda v: json.dumps(v).encode("utf-8"),
+    }
+
+    if SASL_USERNAME and SASL_PASSWORD:
+        producer_kwargs.update(
+            {
+                "security_protocol": SECURITY_PROTOCOL,
+                "sasl_mechanism": SASL_MECHANISM,
+                "sasl_plain_username": SASL_USERNAME,
+                "sasl_plain_password": SASL_PASSWORD,
+            }
+        )
+
+    producer = KafkaProducer(**producer_kwargs)
 
     while True:
         for city, coords in CITIES.items():
             try:
                 weather = fetch_weather(city, coords["lat"], coords["lon"])
-                producer.send("city-weather", value=weather)
-                print(f"✅ Sent to city-weather: {weather}")
+                producer.send(TOPIC, value=weather)
+                print(f"✅ Sent to {TOPIC}: {weather}")
             except Exception as e:
                 print(f"❌ Error fetching/sending for {city}: {e}")
         producer.flush()

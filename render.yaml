@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: city-weather-dashboard
+    runtime: python
+    rootDir: consumer_dashboard
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: KAFKA_BOOTSTRAP_SERVERS
+        sync: false
+      - key: KAFKA_TOPIC
+        value: city-weather
+      - key: KAFKA_SECURITY_PROTOCOL
+        value: SASL_SSL
+      - key: KAFKA_SASL_MECHANISM
+        value: PLAIN
+      - key: KAFKA_SASL_USERNAME
+        sync: false
+      - key: KAFKA_SASL_PASSWORD
+        sync: false
+
+  - type: worker
+    name: city-weather-producer
+    runtime: python
+    rootDir: producer
+    buildCommand: pip install -r requirements.txt
+    startCommand: python producer.py
+    envVars:
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: POLL_INTERVAL_SECONDS
+        value: "300"
+      - key: KAFKA_BOOTSTRAP_SERVERS
+        sync: false
+      - key: KAFKA_TOPIC
+        value: city-weather
+      - key: KAFKA_SECURITY_PROTOCOL
+        value: SASL_SSL
+      - key: KAFKA_SASL_MECHANISM
+        value: PLAIN
+      - key: KAFKA_SASL_USERNAME
+        sync: false
+      - key: KAFKA_SASL_PASSWORD
+        sync: false
