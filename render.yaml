@@ -5,7 +5,7 @@ services:
     plan: free
     rootDir: consumer_dashboard
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:server --bind=0.0.0.0:$PORT
+    startCommand: gunicorn app:server --bind=0.0.0.0:${PORT}
     envVars:
       - key: KAFKA_BOOTSTRAP_SERVERS
         sync: false
