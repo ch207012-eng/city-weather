@@ -69,7 +69,6 @@ Check each platform's free-tier limits and sleeping behavior before production u
 
 This repo includes a Render Blueprint (`render.yaml`) that defines:
 
-It defines:
 - `city-weather-dashboard` (web service)
 - `city-weather-producer` (worker service)
 
