@@ -45,9 +45,44 @@ city-weather/
 ├── docker/
 │   └── docker-compose.yml
 │
+├── render.yaml
+│
 ├── .env
 └── README.md
 ```
+
+---
+
+## ☁️ Deployment Strategy
+
+### Why not direct Netlify deployment for this repo?
+This project runs:
+- a long-running Python **Dash** web process
+- a long-running Kafka **consumer thread**
+- a long-running Kafka **producer worker**
+
+Netlify is optimized for static hosting and serverless functions, so it is not a good direct fit for always-on Kafka worker/consumer processes.
+
+### Recommended default deployment (current architecture)
+Use a host that supports always-on Python services (Render/Railway/Fly.io/VM).
+
+This repo includes a Render Blueprint at:
+- `render.yaml`
+
+It defines:
+- `city-weather-dashboard` (web service)
+- `city-weather-producer` (worker service)
+
+You still need a reachable Kafka broker (`KAFKA_BOOTSTRAP_SERVERS`) and `OPENWEATHER_API_KEY`.
+
+### If you must use Netlify
+Split the architecture:
+1. Host a **static frontend** on Netlify.
+2. Host Kafka consumer + backend API on a service that supports always-on Python.
+3. Have the Netlify frontend poll that backend API.
+4. Keep producer and Kafka broker outside Netlify.
+
+See: `docs/netlify-deployment.md`
 
 ---
 

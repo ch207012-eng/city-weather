@@ -3,3 +3,4 @@ plotly
 kafka-python
 python-dotenv
 pandas
+gunicorn
